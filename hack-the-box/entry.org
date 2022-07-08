@@ -1,0 +1,58 @@
+#+title: Entry
+* Console
+If you open the console in your browser (~Ctrl+Shift+I~) you can see the
+console hints at the fact that there are multiple JavaScript files
+being loaded, and the most important looking one is [[https://www.hackthebox.eu/js/inviteapi.min.js][inviteapi.min.js]].
+* Deobfuscation
+The given JavaScript is a minified/obfuscated file. Using an online
+deobfuscator, you can see the content
+- https://lelinhtinh.github.io/de4js/
+- http://deobfuscatejavascript.com/
+  
+At the time of writing, the content resolves to something like the
+following:
+#+begin_src js
+function makeInviteCode() {
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '/api/invite/how/to/generate',
+        success: function(a) {
+            console.log(a)
+        },
+        error: function(a) {
+            console.log(a)
+        }
+    })
+}
+#+end_src
+* Learn to generate
+By calling ~makeInvitecode()~ in the console, we're given a cryptic
+message. I got two different methods, so I'll write about those, but
+they might have other ones
+** ROT13
+This is the good ol' Caesar cipher.
+** Base64
+This is just an encoding. You can decode in a bash terminal with
+#+begin_src bash
+base64 -d <<< $encoded_message
+#+end_src
+* Make the request
+After decoding the message, you should be instructed to make a ~POST~
+request to https://www.hackthebox.eu/api/invite/generate. You can use
+cURL to do that:
+#+begin_src bash
+curl -X POST https://www.hackthebox.eu/api/invite/generate
+#+end_src
+which should give a simple JSON response back
+#+begin_src json
+{
+  "success": 1,
+  "data": {
+    "code": "Encoded code",
+    "format": "encoded"
+  },
+  "0": 200
+}
+#+end_src
+and finally decode the code and use it to sign up.
