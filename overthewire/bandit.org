@@ -1,13 +1,154 @@
 #+title: Bandit
 #+author: Arian
+#+startup: fold
 
-** Level 0
+I obviously did not put the passwords in, but you should be able to
+run the commands as the solution. There also might be multiple
+solutions provided to solve the same problem; pick your poison.
+
+* Level 0
+This is a simple ssh login.
 #+begin_src shell
 ssh bandit0@bandit.labs.overthewire.org -p 2220
 #+end_src
 
-** Level 1
+* Level 1
+Use the ~cat~ command to view the content.
 #+begin_src shell
-ssh bandit0@bandit.labs.overthewire.org -p 2220 cat readme
+cat readme
 #+end_src
+
+* Level 2
+A simple ~./~ prefix explicitly reads the file from the current
+directory instead of the stdin
+#+begin_src shell
+cat ./-
+#+end_src
+
+* Level 3
+If you just type ~cat s~ and press TAB you would see the following
+#+begin_src shell
+cat spaces\ in\ this\ filename
+#+end_src
+
+Another simple solution is using single or double quotes
+#+begin_src shell
+cat "spaces in this filename"
+#+end_src
+
+* Level 4
+If you type ~cat i~ and TAB a few times you'll see ~inhere/.hidden~ show
+up. 
+
+Another way of figuring this out is just using the ~-a~ flag:
+#+begin_src shell
+ls -a inhere
+#+end_src
+which shows you the path of the file.
+
+#+begin_src shell
+cat inhere/.hidden
+#+end_src
+
+* Level 5
+One easy way is using ~strings~:
+#+begin_src shell
+strings inhere/*
+#+end_src
+
+You can see the outlier, which is the password. A better way of doing
+is is a simple
+
+#+begin_src shell
+file inhere/*
+#+end_src
+
+Which shows that only one of the files is an ~ASCII text~, which then
+you can read with ~cat~:
+#+begin_src shell
+cat inhere/-file07
+#+end_src
+
+* Level 6
+For this one you might want to check out the man page (~man find~). If
+you don't know, you can search through man-pages using ~/~. For several
+of the flags like ~-readable~ or ~-type~ this would be very necessary to know.
+
+The quickest way to know which file it is you can simply rely on the
+~-size~ flag.
+#+begin_src shell
+file -size 1033c
+#+end_src
+
+That's it! You can see the content using a quick bash trick
+#+begin_src shell
+cat $(find -size 1033c)
+#+end_src
+
+Although that's enough to get the solution, you can find all
+non-executable human-readable files using ~!~ for negation, ~xargs~ for
+running ~du~ (disk usage) on all files, and filtering the readable files
+#+begin_src shell
+find ! -executable | xargs -I ? file ? | grep "ASCII text$"
+#+end_src
+
+* Level 7
+In this one size alone is not enough, so we'll factor in the user and
+group owner:
+#+begin_src shell
+find / -size 33c -user bandit7 -group bandit6
+#+end_src
+
+You'll see a lot of ~Permission denied~ because as a user you can't see
+all kind of files. In order to get rid of that you can hide standard
+error by redirecting like ~2> /dev/null~.
+
+To put it all together,
+#+begin_src shell
+cat $(find / -size 33c -user bandit7 -group bandit6 2> /dev/null)
+#+end_src
+
+* Level 8
+the file ~data.txt~ is about 98566 lines; you can find that out using
+~wc -l data.txt~. This is hard to filter out with the eyes, so we'll
+rely on ~grep~:
+#+begin_src shell
+grep millionth data.txt
+#+end_src
+That'll show you the password, which you can then copy and paste. If
+you want to insist on /only/ seeing the password and cutting out the
+second part:
+#+begin_src shell
+grep millionth data.txt | cut -f2
+#+end_src
+
+* Level 9
+First, to get the count of every line, we'll do this:
+#+begin_src shell
+sort data.txt | uniq -c
+#+end_src
+There's still too many lines that appeared 10 times, so we'll have to
+~sort~ again, so we'll do it again and only get the last line:
+#+begin_src shell
+sort data.txt | uniq -c | sort | tail -1 | awk '{print $2}'
+#+end_src
+
+* Level 10
+First we gotta make it readable using ~strings~
+#+begin_src shell
+strings data.txt
+#+end_src
+
+Then, we'll get the lines that *start with one or more =*:
+#+begin_src shell
+strings data.txt | egrep '^\=+'
+#+end_src
+
+the one we need has more than 4 characters (the one besides "the"):
+#+begin_src shell
+strings data.txt | egrep '^\=+ ....' | awk '{print $2}'
+#+end_src
+
+Check out https://regex101.com/ to learn more about regular
+expressions. ~awk~, however, is its own language.
 
