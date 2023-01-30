@@ -16,5 +16,5 @@ Add shell
 #+end_src
 
 #+begin_src shell :results silent
-  hugo --verbose
+  hugo --minify
 #+end_src

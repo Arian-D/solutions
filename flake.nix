@@ -11,14 +11,14 @@
           overlays = [ emacs-overlay.overlays.package ];
         };
         emacsWithOxHugo = pkgs.emacsWithPackages (epkgs: [ epkgs.ox-hugo ]);
-        deps = [ pkgs.hugo emacsWithOxHugo ];
+        deps = [ pkgs.go pkgs.git pkgs.hugo emacsWithOxHugo ];
       in rec {
         packages.default = pkgs.stdenv.mkDerivation {
           pname = "writeups";
           version = "0.0.1";
-          dontFixup = true;
           src = ./.;
           installPhase = "
+            mkdir -p $out
             cp -r public $out
           ";
           nativeBuildInputs = deps;
