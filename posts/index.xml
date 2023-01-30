@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Writeups</title><link>http://example.org/posts/</link><description>Recent content in Posts on Writeups</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="http://example.org/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Bandit</title><link>http://example.org/posts/bandit/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://example.org/posts/bandit/</guid><description>I obviously did not put the passwords in, but you should be able to run the commands as the solution. There also might be multiple solutions provided to solve the same problem; pick your poison.
+Level 0 This is a simple ssh login.
+ssh bandit0@bandit.labs.overthewire.org -p 2220 Level 1 Use the cat command to view the content.
+cat readme Level 2 A simple ./ prefix explicitly reads the file from the current directory instead of the stdin</description><content>&lt;p>I obviously did not put the passwords in, but you should be able to
+run the commands as the solution. There also might be multiple
+solutions provided to solve the same problem; pick your poison.&lt;/p>
+&lt;h2 id="level-0">Level 0&lt;/h2>
+&lt;p>This is a simple ssh login.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ssh bandit0@bandit.labs.overthewire.org -p &lt;span style="color:#ae81ff">2220&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-1">Level 1&lt;/h2>
+&lt;p>Use the &lt;code>cat&lt;/code> command to view the content.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat readme
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-2">Level 2&lt;/h2>
+&lt;p>A simple &lt;code>./&lt;/code> prefix explicitly reads the file from the current
+directory instead of the stdin&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat ./-
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-3">Level 3&lt;/h2>
+&lt;p>If you just type &lt;code>cat s&lt;/code> and press TAB you would see the following&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat spaces&lt;span style="color:#ae81ff">\ &lt;/span>in&lt;span style="color:#ae81ff">\ &lt;/span>this&lt;span style="color:#ae81ff">\ &lt;/span>filename
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Another simple solution is using single or double quotes&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat &lt;span style="color:#e6db74">&amp;#34;spaces in this filename&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-4">Level 4&lt;/h2>
+&lt;p>If you type &lt;code>cat i&lt;/code> and TAB a few times you&amp;rsquo;ll see &lt;code>inhere/.hidden&lt;/code> show
+up.&lt;/p>
+&lt;p>Another way of figuring this out is just using the &lt;code>-a&lt;/code> flag:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ls -a inhere
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>which shows you the path of the file.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat inhere/.hidden
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-5">Level 5&lt;/h2>
+&lt;p>One easy way is using &lt;code>strings&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>strings inhere/*
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can see the outlier, which is the password. A better way of doing
+is is a simple&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>file inhere/*
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Which shows that only one of the files is an &lt;code>ASCII text&lt;/code>, which then
+you can read with &lt;code>cat&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat inhere/-file07
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-6">Level 6&lt;/h2>
+&lt;p>For this one you might want to check out the man page (&lt;code>man find&lt;/code>). If
+you don&amp;rsquo;t know, you can search through man-pages using &lt;code>/&lt;/code>. For several
+of the flags like &lt;code>-readable&lt;/code> or &lt;code>-type&lt;/code> this would be very necessary to know.&lt;/p>
+&lt;p>The quickest way to know which file it is you can simply rely on the
+&lt;code>-size&lt;/code> flag.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>file -size 1033c
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That&amp;rsquo;s it! You can see the content using a quick bash trick&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat &lt;span style="color:#66d9ef">$(&lt;/span>find -size 1033c&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Although that&amp;rsquo;s enough to get the solution, you can find all
+non-executable human-readable files using &lt;code>!&lt;/code> for negation, &lt;code>xargs&lt;/code> for
+running &lt;code>du&lt;/code> (disk usage) on all files, and filtering the readable files&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>find ! -executable | xargs -I ? file ? | grep &lt;span style="color:#e6db74">&amp;#34;ASCII text&lt;/span>$&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-7">Level 7&lt;/h2>
+&lt;p>In this one size alone is not enough, so we&amp;rsquo;ll factor in the user and
+group owner:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>find / -size 33c -user bandit7 -group bandit6
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You&amp;rsquo;ll see a lot of &lt;code>Permission denied&lt;/code> because as a user you can&amp;rsquo;t see
+all kind of files. In order to get rid of that you can hide standard
+error by redirecting like &lt;code>2&amp;gt; /dev/null&lt;/code>.&lt;/p>
+&lt;p>To put it all together,&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat &lt;span style="color:#66d9ef">$(&lt;/span>find / -size 33c -user bandit7 -group bandit6 2&amp;gt; /dev/null&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-8">Level 8&lt;/h2>
+&lt;p>the file &lt;code>data.txt&lt;/code> is about 98566 lines; you can find that out using
+&lt;code>wc -l data.txt&lt;/code>. This is hard to filter out with the eyes, so we&amp;rsquo;ll
+rely on &lt;code>grep&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>grep millionth data.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That&amp;rsquo;ll show you the password, which you can then copy and paste. If
+you want to insist on &lt;em>only&lt;/em> seeing the password and cutting out the
+second part:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>grep millionth data.txt | cut -f2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-9">Level 9&lt;/h2>
+&lt;p>First, to get the count of every line, we&amp;rsquo;ll do this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sort data.txt | uniq -c
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>There&amp;rsquo;s still too many lines that appeared 10 times, so we&amp;rsquo;ll have to
+&lt;code>sort&lt;/code> again, so we&amp;rsquo;ll do it again and only get the last line:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sort data.txt | uniq -c | sort | tail -1 | awk &lt;span style="color:#e6db74">&amp;#39;{print $2}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-10">Level 10&lt;/h2>
+&lt;p>First we gotta make it readable using &lt;code>strings&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>strings data.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, we&amp;rsquo;ll get the lines that &lt;strong>start with one or more =&lt;/strong>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>strings data.txt | egrep &lt;span style="color:#e6db74">&amp;#39;^\=+&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>the one we need has more than 4 characters (the one besides &amp;ldquo;the&amp;rdquo;):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>strings data.txt | egrep &lt;span style="color:#e6db74">&amp;#39;^\=+ ....&amp;#39;&lt;/span> | awk &lt;span style="color:#e6db74">&amp;#39;{print $2}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Check out &lt;a href="https://regex101.com/">https://regex101.com/&lt;/a> to learn more about regular
+expressions. &lt;code>awk&lt;/code>, however, is its own language.&lt;/p>
+&lt;h2 id="level-11">Level 11&lt;/h2>
+&lt;p>It&amp;rsquo;s easy to decode base64; one way is to use it is with a pipe&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat data.txt | base64 -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can read from standard input with &lt;code>&amp;lt;&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>base64 -d &amp;lt; data.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Or just pass it to &lt;code>base64&lt;/code> as an argument and read the 4th component
+(the password)&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>base64 -d data.txt | awk &lt;span style="color:#e6db74">&amp;#39;{print $4}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-12">Level 12&lt;/h2>
+&lt;p>This is a fun one. You can &lt;a href="https://duckduckgo.com/?q=rot13+decoder&amp;amp;ia=answer">look up&lt;/a> websites that do it like &lt;a href="https://cyberchef.org/">cyberchef&lt;/a>,
+but if you don&amp;rsquo;t want to exit your terminal, you can simply decode it
+with python. You can launch Python by just typing &lt;code>python3&lt;/code> and you can
+use the built-in &lt;code>codecs&lt;/code> library&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> codecs &lt;span style="color:#f92672">import&lt;/span> decode
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(decode(open(&lt;span style="color:#e6db74">&amp;#39;data.txt&amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>read(), &lt;span style="color:#e6db74">&amp;#39;rot_13&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-13">Level 13&lt;/h2>
+&lt;p>As the page suggests, try using &lt;code>xxd&lt;/code> with the &lt;code>-r&lt;/code> flag to reverse the
+hexdump.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>xxd -r data.txt &amp;gt; /tmp/somefile
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Calling &lt;code>file /tmp/somefile&lt;/code> will inform us that the file is
+gzip-compressed&lt;/p>
+&lt;p>You might think a simple &lt;code>gzip -d /tmp/somefile&lt;/code> might work, but sadly
+&lt;code>gzip&lt;/code> will complain that we don&amp;rsquo;t have the right file extension. To get
+around this, we&amp;rsquo;ll do use some redirection magic to &lt;span class="underline">read&lt;/span> from the
+stdin for decompressing, and &lt;span class="underline">write&lt;/span> to another file&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>gzip -d &amp;lt; /tmp/somefile &amp;gt; /tmp/f1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next one is bzip2, gzip again, tar, and so on. One thing the website
+does &lt;strong>not&lt;/strong> mention is that you don&amp;rsquo;t have to create new files in
+&lt;code>/tmp&lt;/code>. One of the strengths of posix shell is the ability to rely on
+pipes and stdin and stdout.&lt;/p>
+&lt;p>In the spirit of keeping these solutions to one-line, we can just pipe
+(compose, chain, or however else you want to think about it).&lt;/p>
+&lt;p>Starting with&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>xxd -r data.txt | file -
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We&amp;rsquo;ll learn the file type, so we can move on to&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>xxd -r data.txt | gzip -d | file -
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If we continue like so, there&amp;rsquo;s no need to create temporary files, and
+it&amp;rsquo;ll be very neat. The deeply nested compressed file could easily be
+decompressed using&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>xxd -r data.txt | gzip -d | bzip2 -d | gzip -d | tar -xO | tar -xO | bzip2 -d | tar -xO | gzip -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-14">Level 14&lt;/h2>
+&lt;p>This level wants to introduce you to ssh keys. Just a &lt;code>-i&lt;/code> is enough to
+get to the next level&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ssh -i sshkey.private bandit14@localhost -p &lt;span style="color:#ae81ff">2220&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-15">Level 15&lt;/h2>
+&lt;p>This level introduces you to netcat. Take a loot at &lt;code>man nc&lt;/code> and &lt;code>nc -h&lt;/code>
+to get a feel, but the gist of &lt;code>nc&lt;/code> is simple:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>nc localhost &lt;span style="color:#ae81ff">30000&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Although you can interactively send the password like this, you can
+take advantage of stdin, and send it to nc:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>nc localhost &lt;span style="color:#ae81ff">30000&lt;/span> &amp;lt; /etc/bandit_pass/bandit14
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-16">Level 16&lt;/h2>
+&lt;p>This is very similar, but with TLS. OverTheWire doesn&amp;rsquo;t make it clear,
+but to save you some time, check out &lt;code>man openssl-s_client&lt;/code>. The
+subcommand man-page is the one they&amp;rsquo;re referring to, and just like the
+&lt;code>nc&lt;/code> command, you can redirect the file to stdin.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>openssl s_client -ign_eof localhost:30001 &amp;lt; /etc/bandit_pass/bandit15
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item></channel></rss>
