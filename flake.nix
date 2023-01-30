@@ -17,10 +17,17 @@
           pname = "writeups";
           version = "0.0.1";
           src = ./.;
-          installPhase = "
+          installPhase = ''
             mkdir -p $out
             cp -r public $out
-          ";
+          '';
+          buildPhase = ''
+            emacs --batch \
+                  --eval "(require 'ox-hugo)" \
+                  --eval "(setq org-confirm-babel-evaluate nil)" \
+                  --file ./build.org \
+                  --funcall org-babel-execute-buffer
+          '';
           nativeBuildInputs = deps;
         };
       });
