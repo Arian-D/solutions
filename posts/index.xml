@@ -138,4 +138,34 @@ but to save you some time, check out &lt;code>man openssl-s_client&lt;/code>. Th
 subcommand man-page is the one they&amp;rsquo;re referring to, and just like the
 &lt;code>nc&lt;/code> command, you can redirect the file to stdin.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>openssl s_client -ign_eof localhost:30001 &amp;lt; /etc/bandit_pass/bandit15
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-17">Level 17&lt;/h2>
+&lt;p>The main &lt;code>nmap&lt;/code> flags you would need for discovery here are &lt;code>-p&lt;/code> for the
+port range, and &lt;code>-sV&lt;/code> for services. First lets see what&amp;rsquo;s open&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>nmap -p 31000-32000 localhost
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since the number of ports is a lot, using &lt;code>-sV&lt;/code> on the range would take
+too long, we can do a quick &lt;code>openssl s_client localhost:...&lt;/code> on each of
+them.&lt;/p>
+&lt;p>After a quick trial and error, you would notice that one responds back
+with &lt;code>Wrong! Please enter the correct current password&lt;/code>. Sending the
+correct current password reveals an ssh private key, which you can
+save as some file for connecting to the next level:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ssh -i the-private-key-file bandit17@bandit.labs.overthewire.org -p &lt;span style="color:#ae81ff">2220&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-18">Level 18&lt;/h2>
+&lt;p>The 4th suggested command on the list is the answer! &lt;code>diff&lt;/code> shows you
+the difference of two files, which would be the answer for the next
+level.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>diff passwords.old passwords.new
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As mentioned, the &amp;ldquo;Byebye !&amp;rdquo; doesn&amp;rsquo;t mean it&amp;rsquo;s the wrong answer.&lt;/p>
+&lt;h2 id="level-19">Level 19&lt;/h2>
+&lt;p>Since we get &amp;ldquo;Byebye !&amp;rdquo;, that means we can&amp;rsquo;t interact with the
+shell. Appending commands could let us execute them. For instance,&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ssh bandit18@bandit.labs.overthewire.org -p &lt;span style="color:#ae81ff">2220&lt;/span> bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Would give you a shell. A quick look around shows there&amp;rsquo;s a file named
+&lt;code>readme&lt;/code>, which you can look at with &lt;code>cat&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ssh bandit18@bandit.labs.overthewire.org -p &lt;span style="color:#ae81ff">2220&lt;/span> cat readme
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="level-20">Level 20&lt;/h2>
+&lt;p>This level teaches you about setuid. The &lt;code>bandit20-do&lt;/code> executes
+everything as &lt;code>bandit20&lt;/code>. You can get the file content by simply
+invoking the binary followed by &lt;code>cat&lt;/code> and the file name:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>./bandit20-do cat /etc/bandit_pass/bandit20
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item></channel></rss>

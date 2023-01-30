@@ -81,5 +81,23 @@ take advantage of stdin, and send it to nc:</p><div class=highlight><pre tabinde
 but to save you some time, check out <code>man openssl-s_client</code>. The
 subcommand man-page is the one they&rsquo;re referring to, and just like the
 <code>nc</code> command, you can redirect the file to stdin.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>openssl s_client -ign_eof localhost:30001 &lt; /etc/bandit_pass/bandit15
+</span></span></code></pre></div><h2 id=level-17>Level 17<a href=#level-17 class=hanchor arialabel=Anchor>&#8983;</a></h2><p>The main <code>nmap</code> flags you would need for discovery here are <code>-p</code> for the
+port range, and <code>-sV</code> for services. First lets see what&rsquo;s open</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>nmap -p 31000-32000 localhost
+</span></span></code></pre></div><p>Since the number of ports is a lot, using <code>-sV</code> on the range would take
+too long, we can do a quick <code>openssl s_client localhost:...</code> on each of
+them.</p><p>After a quick trial and error, you would notice that one responds back
+with <code>Wrong! Please enter the correct current password</code>. Sending the
+correct current password reveals an ssh private key, which you can
+save as some file for connecting to the next level:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ssh -i the-private-key-file bandit17@bandit.labs.overthewire.org -p <span style=color:#ae81ff>2220</span>
+</span></span></code></pre></div><h2 id=level-18>Level 18<a href=#level-18 class=hanchor arialabel=Anchor>&#8983;</a></h2><p>The 4th suggested command on the list is the answer! <code>diff</code> shows you
+the difference of two files, which would be the answer for the next
+level.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>diff passwords.old passwords.new
+</span></span></code></pre></div><p>As mentioned, the &ldquo;Byebye !&rdquo; doesn&rsquo;t mean it&rsquo;s the wrong answer.</p><h2 id=level-19>Level 19<a href=#level-19 class=hanchor arialabel=Anchor>&#8983;</a></h2><p>Since we get &ldquo;Byebye !&rdquo;, that means we can&rsquo;t interact with the
+shell. Appending commands could let us execute them. For instance,</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ssh bandit18@bandit.labs.overthewire.org -p <span style=color:#ae81ff>2220</span> bash
+</span></span></code></pre></div><p>Would give you a shell. A quick look around shows there&rsquo;s a file named
+<code>readme</code>, which you can look at with <code>cat</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ssh bandit18@bandit.labs.overthewire.org -p <span style=color:#ae81ff>2220</span> cat readme
+</span></span></code></pre></div><h2 id=level-20>Level 20<a href=#level-20 class=hanchor arialabel=Anchor>&#8983;</a></h2><p>This level teaches you about setuid. The <code>bandit20-do</code> executes
+everything as <code>bandit20</code>. You can get the file content by simply
+invoking the binary followed by <code>cat</code> and the file name:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>./bandit20-do cat /etc/bandit_pass/bandit20
 </span></span></code></pre></div></div></div></article></div><footer class=footer><div class=footer__inner><div class=copyright><span>© 2023 Powered by <a href=http://gohugo.io>Hugo</a></span>
 <span>:: <a href=https://github.com/panr/hugo-theme-terminal target=_blank>Theme</a> made by <a href=https://github.com/panr target=_blank>panr</a></span></div></div></footer><script type=text/javascript src=/ctf-writeups/bundle.min.js></script></div></body></html>
