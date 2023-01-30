@@ -1,0 +1,20 @@
+#+title: Build
+
+
+Add shell 
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
+#+end_src
+
+#+begin_src emacs-lisp :results silent
+  ;; TODO: Do it recursively instead
+  (dolist (file (directory-files "./overthewire/" t ".org"))
+    (with-current-buffer (find-file file)
+      (org-hugo-export-wim-to-md)))
+#+end_src
+
+#+begin_src shell :results silent
+  hugo --verbose
+#+end_src

@@ -1,5 +1,7 @@
 #+title: Bandit
 #+author: Arian
+#+hugo_base_dir: ../
+# #+hugo_section: ./
 #+startup: fold
 
 I obviously did not put the passwords in, but you should be able to
@@ -152,3 +154,108 @@ strings data.txt | egrep '^\=+ ....' | awk '{print $2}'
 Check out https://regex101.com/ to learn more about regular
 expressions. ~awk~, however, is its own language.
 
+* Level 11
+It's easy to decode base64; one way is to use it is with a pipe
+#+begin_src shell
+cat data.txt | base64 -d
+#+end_src
+
+You can read from standard input with =<=
+#+begin_src shell
+base64 -d < data.txt
+#+end_src
+
+Or just pass it to ~base64~ as an argument and read the 4th component
+(the password)
+#+begin_src shell
+base64 -d data.txt | awk '{print $4}'
+#+end_src
+
+* Level 12
+This is a fun one. You can [[https://duckduckgo.com/?q=rot13+decoder&ia=answer][look up]] websites that do it like [[https://cyberchef.org/][cyberchef]],
+but if you don't want to exit your terminal, you can simply decode it
+with python. You can launch Python by just typing ~python3~ and you can
+use the built-in ~codecs~ library
+#+begin_src python
+  from codecs import decode
+  print(decode(open('data.txt').read(), 'rot_13'))
+#+end_src
+
+* Level 13
+As the page suggests, try using =xxd= with the =-r= flag to reverse the
+hexdump.
+#+begin_src shell
+xxd -r data.txt > /tmp/somefile
+#+end_src
+Calling =file /tmp/somefile= will inform us that the file is
+gzip-compressed
+
+You might think a simple =gzip -d /tmp/somefile= might work, but sadly
+=gzip= will complain that we don't have the right file extension. To get
+around this, we'll do use some redirection magic to _read_ from the
+stdin for decompressing, and _write_ to another file
+#+begin_src shell
+gzip -d < /tmp/somefile > /tmp/f1
+#+end_src
+
+Next one is bzip2, gzip again, tar, and so on. One thing the website
+does *not* mention is that you don't have to create new files in
+=/tmp=. One of the strengths of posix shell is the ability to rely on
+pipes and stdin and stdout.
+
+In the spirit of keeping these solutions to one-line, we can just pipe
+(compose, chain, or however else you want to think about it).
+
+Starting with
+#+begin_src shell
+xxd -r data.txt | file -
+#+end_src
+We'll learn the file type, so we can move on to
+#+begin_src shell
+xxd -r data.txt | gzip -d | file -
+#+end_src
+
+If we continue like so, there's no need to create temporary files, and
+it'll be very neat. The deeply nested compressed file could easily be
+decompressed using
+#+begin_src shell
+xxd -r data.txt | gzip -d | bzip2 -d | gzip -d | tar -xO | tar -xO | bzip2 -d | tar -xO | gzip -d
+#+end_src
+
+* Level 14
+This level wants to introduce you to ssh keys. Just a =-i= is enough to
+get to the next level
+#+begin_src shell
+ssh -i sshkey.private bandit14@localhost -p 2220
+#+end_src
+
+* Level 15
+This level introduces you to netcat. Take a loot at =man nc= and =nc -h=
+to get a feel, but the gist of =nc= is simple:
+#+begin_src shell
+nc localhost 30000
+#+end_src
+Although you can interactively send the password like this, you can
+take advantage of stdin, and send it to nc:
+#+begin_src shell
+nc localhost 30000 < /etc/bandit_pass/bandit14
+#+end_src
+
+* Level 16
+This is very similar, but with TLS. OverTheWire doesn't make it clear,
+but to save you some time, check out =man openssl-s_client=. The
+subcommand man-page is the one they're referring to, and just like the
+=nc= command, you can redirect the file to stdin.
+#+begin_src shell
+openssl s_client -ign_eof localhost:30001 < /etc/bandit_pass/bandit15
+#+end_src
+
+# * Level 17
+# The main =nmap= flags you would need for discovery here are =-p= for the
+# port range, and =-sV= for services. First lets see what's open
+# #+begin_src shell
+# nmap -p 31000-32000 localhost
+# #+end_src
+# Since the number of ports is a lot, using =-sV= on the range would take
+# too long. Now that we know what ports are listening, we can do a
+# simple search of each one of them.
