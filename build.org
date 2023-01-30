@@ -1,19 +1,32 @@
 #+title: Build
+#+author: Arian
+#+startup: fold
 
-Add shell 
+This file is called by [[./flake.nix]] to build the website. Prior to
+getting here, Nix has to provide the dependecies which are:
+- Emacs
+- Ox-hugo
+- Hugo
+
+* Org setup
+=ob= needs =shell= to be amongst the executable langauges.
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)))
 #+end_src
 
+* Org to markdown
+For all the org files run =org-hugo-export-wim-to-md=.
 #+begin_src emacs-lisp :results silent
-  ;; TODO: Do it recursively instead
+  ;; TODO: Do it recursively instead once there are more directories
   (dolist (file (directory-files "./overthewire/" t ".org"))
     (with-current-buffer (find-file file)
       (org-hugo-export-wim-to-md)))
 #+end_src
 
+* markdown to hugo
+This is the final step during build to compile the website.
 #+begin_src shell :results silent
   hugo --minify
 #+end_src

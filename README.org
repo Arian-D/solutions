@@ -1,1 +1,8 @@
 #+title: Some writeups
+
+My writeups, which are probably hosted [[https://arian-d.github.io/ctf-writeups][here]]. The website is at its
+early stages so have patience with the jankiness 🙂.
+
+* Build process
+To see how the website is built take a look at [[./build.org]]
+
