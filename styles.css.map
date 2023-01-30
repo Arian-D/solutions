@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "styles.css",
-	"sourceRoot": "/build/3d5qrdsahfcrl0njsqayzxi84swaw3yx-source",
+	"sourceRoot": "/build/gacngrhxcrhw08v7rhq4w48n6p1s38qk-source",
 	"sources": [
 		"css/base.scss",
 		"themes/terminal/assets/css/variables.scss",
