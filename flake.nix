@@ -11,7 +11,7 @@
           overlays = [ emacs-overlay.overlays.package ];
         };
         emacsWithOxHugo = pkgs.emacsWithPackages (epkgs: [ epkgs.ox-hugo ]);
-        deps = [ pkgs.go pkgs.git pkgs.hugo emacsWithOxHugo ];
+        deps = [ pkgs.hugo emacsWithOxHugo ];
       in rec {
         packages.default = pkgs.stdenv.mkDerivation {
           pname = "writeups";
