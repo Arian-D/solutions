@@ -1,8 +1,11 @@
-#+title: Some writeups
+#+title: Solutions
+#+author: Arian
 
-My writeups, which are probably hosted [[https://arian-d.github.io/ctf-writeups][here]]. The website is at its
-early stages so have patience with the jankiness 🙂.
+This repo contains some coding challenge solutions and some ctf
+writeups. Feel free to look around!
+
 
 * Build process
+# TODO: Maybe add a badge or something for hugo build status?
 To see how the website is built take a look at [[./build.org]]
 
