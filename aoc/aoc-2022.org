@@ -1,7 +1,6 @@
-#+title: Advent of Code
+#+title: Advent of Code 2022
 #+author: Arian
 #+startup: fold
-#+description: My inconsistent advent of code solutions in various languages.
 
 * Day 1
 ** Emacs Lisp

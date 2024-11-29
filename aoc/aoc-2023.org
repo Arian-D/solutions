@@ -1,0 +1,70 @@
+#+title: Advent of Code 2023
+* Day 1
+** IN-PROGRESS Nushell
+#+begin_src nushell :noweb-ref nu-day-1-solution :results none
+  def "caliberation sum part-1" []: {
+      $in
+      | lines
+      | par-each {
+        parse --regex '(?P<digit>[0-9])'
+        | get digit
+        | $"($in | first)($in | last)"
+        | into int
+      }
+      | math sum
+  }
+
+  def "caliberation sum part-2" []: {
+      $in
+      | lines
+      | par-each {
+        parse --regex '(?P<digit>one|two|three|four|five|six|seven|eight|nine|[0-9])'
+        | get digit
+        | each {
+            match $in {
+              one => 1,
+              two => 2,
+              three => 3,
+              four => 4,
+              five => 5,
+              six => 6,
+              seven => 7,
+              eight => 8,
+              nine => 9,
+              $n => $n
+            }
+        }
+        | $"($in | first)($in | last)"
+        | into int
+      }
+      | math sum
+  }
+#+end_src
+
+and some tests to make sure it runs fine.
+#+begin_src nushell :noweb yes
+  <<nu-day-1-solution>>
+
+  use std assert
+
+  # Part 1
+  let test_case_1 = "1abc2
+  pqr3stu8vwx
+  a1b2c3d4e5f
+  treb7uchet"
+
+  assert equal ($test_case_1 | caliberation sum part-1) 142
+
+  # Part 2
+  let test_case_2 = "two1nine
+  eightwothree
+  abcone2threexyz
+  xtwone3four
+  4nineeightseven2
+  zoneight234
+  7pqrstsixteen"
+
+  assert equal ($test_case_2 | caliberation sum part-2) 281
+#+end_src
+
+#+RESULTS:
