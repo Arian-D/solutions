@@ -1,0 +1,262 @@
+#+title: Advent of Code
+#+author: Arian
+#+startup: fold
+#+description: My inconsistent advent of code solutions in various languages.
+
+* Day 1
+** Emacs Lisp
+- There's no built-in =sum= in lisp-land, so we can =apply= the =+= function.
+- Here, I'm using =apply-partially= to somewhat simulate currying.
+- Although =cl-reduce= requires the =cl= library, it's advantageous over
+  =seq-reduce= because it does not require an initial item, thus making
+  it suitable for =apply-partially=
+#+begin_src emacs-lisp
+  (defun sorted-calories (input-file)
+    "Read the file and return a sorted list of elf item calories."
+    (with-temp-buffer
+      (insert-file-contents input-file)
+      (let* ((file-content (buffer-string))
+             (list (split-string file-content "\n\n"))
+             (list-of-lists (mapcar
+                             (lambda (list) (split-string list "\n"))
+                             list))
+             (parsed (mapcar (apply-partially #'mapcar
+                                              #'string-to-number)
+                             list-of-lists)) 
+             (summed-up (mapcar (apply-partially #'cl-reduce #'+) parsed)))
+        (sort summed-up #'>))))
+
+  (let* ((sorted (sorted-calories "/tmp/input.txt"))
+         (part-1-solution (car sorted))
+         (part-2-solution
+          (apply #'+ (seq-take sorted 3))))
+    (print (list part-1-solution part-2-solution)))
+#+end_src
+
+** Haskell
+- The function is [[https://wiki.haskell.org/Pointfree][point-free]] and simple compositions.
+- This solution is inefficient because =sort= sorts items in ascending
+  order and I =reverse= them. It gets the job done for this simple
+  problem, but if I needed to make it more efficient I would've used
+  the =sortBy= function instead and used a different =compare= to avoid reversing.
+- I'll only mention it here because it's the first problem, but haskell offers lots of functions that
+  offer richer types like =Maybe= and =Either= to do this in a more
+  error-free manner in cases like parsing integers or reading files,
+  but instead I just went with the ez™ solution.
+#+begin_src haskell :results output
+import Data.List (sort)
+import Data.List.Split (splitOn)
+
+sortedCalories :: String -> [Int]
+sortedCalories =
+    (reverse . sort . (map sum) . (map (map read)) . (splitOn [""]) . lines)
+
+highest = head . sortedCalories
+
+top3highest = sum . (take 3) . sortedCalories
+
+main = do
+  file <- readFile "/tmp/input.txt"
+  -- Part 1 solution
+  print . highest $ file
+  -- Part 2 solution
+  print . top3highest $ file
+#+end_src
+
+#  It doesn't look good (yet), but I'll either use minted for syntax
+#  highlighting, or I'll be lazy and use ox-hugo. We'll see
+
+** Python
+- Once again, we're abusing all the functional programming features
+  like =.split=, =map=, and [[https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions][list comprehensions]].
+- =sorted= has a positional argument called =reverse= that lets us sort in
+  descending order. This allows us to use the top of the list.
+- Just like the previous solutions, it is not done in one-pass, making
+  it an inefficient but easy solution.
+#+begin_src python
+  with open("/tmp/input.txt", 'r') as f:
+      sorted_calories = sorted((
+          sum(map(int, elf.split('\n')))
+          for elf in f.read().split("\n\n")
+          if '' not in elf.split('\n')
+      ), reverse=True)
+
+      print(f"Part 1: {sorted_calories[0]}")
+      print(f"Part 2: {sum(sorted_calories[:3])}")
+#+end_src
+
+* Day 2
+** Python
+- Imperative verbose solution
+- I figured out I could use modular arithmetic in the 2nd part, but I
+  kept the first part's method (checking against a set of winning
+  tuples) because it's more readable to me
+#+begin_src python
+  with open("inputs/day2.txt", 'r') as f:
+      total = 0
+      real_total = 0
+      for players in f.read().split('\n'):
+          if players == "":
+              continue
+          # Part 1
+          opponent, me = players.split()
+          values = opponent, me
+          if values in {('C', 'X'), ('A', 'Y'), ('B', 'Z')}:
+              total += 6
+          if ord(opponent) - ord('A') == ord(me) - ord('X'):
+              total += 3
+          total += ord(me) - (ord('X') - 1)
+
+          # Part 2
+          choice = me
+          if choice == 'Y': # Draw
+              real_total += ord(opponent) - (ord('A') - 1)
+              real_total += 3
+          elif choice == 'X': # Lose
+              real_total += (((ord(opponent) - ord('A')) - 1) % 3) + 1
+              real_total += 0
+          elif choice == 'Z': # Win
+              real_total += (((ord(opponent) - ord('A')) + 1) % 3) + 1
+              real_total += 6
+      print(f"Part 1: {total}")
+      print(f"Part 2: {real_total}")
+
+
+#+end_src
+** C
+- C is perfect for this problem since there's no extra =ord= being used
+  everywhere; C chars could be used in ordinary arithmetic
+***  Part 1
+- =fscanf= allows reading two spaced integers, so I took advantage of
+  that for reading both characters.
+- As per previous solution, I ommited the loss case, becasue it'd be unnecessary
+- If you wanna see the assembly, check [[https://godbolt.org/z/KPz3W9WrP][Godbolt's website]]
+
+#+begin_src C
+  #include <stdio.h>
+
+  int main() {
+    FILE * input = fopen("inputs/day2.txt", "r");
+    char opponent, me;
+    unsigned int total = 0;
+    do {
+      int ret = fscanf(input, "%c %c\n", &opponent, &me);
+      if (opponent - 'A' == me - 'X') // Draw
+        total += 3;
+      else if ((opponent - 'A' + 1) % 3 == me - 'X') // Win
+        total += 6;
+      total += me - 'X' + 1;
+    } while (!feof(input));
+    printf("Part 1: %d\n", total);
+    fclose(input);
+  }
+#+end_src
+*** Part 2
+- Another nice thing with C is that there's switch-case, unlike Python
+  (at least not until [[https://peps.python.org/pep-0636/][recently]])
+- The behavior  of =%= is unlike Python, where negative numbers are in
+  the domain. This requires the use of a simple ternary operator to
+  handle negative cases. (See this [[https://math.stackexchange.com/questions/801962/difference-between-modulus-and-remainder#801988][stackexchange answer]])
+- [[https://godbolt.org/z/8hf8hbc7e][x86-64 assembly]] for the insane
+#+begin_src C
+  #include <stdio.h>
+
+  int main() {
+    FILE * input = fopen("inputs/day2.txt", "r");
+    char opponent, choice;
+    unsigned int total = 0;
+    do {
+      int ret = fscanf(input, "%c %c\n", &opponent, &choice);
+      int me;
+      switch (choice) {
+      case 'X':
+        me = (opponent - 'A' - 1);
+        me = me < 0 ? 3 : me + 1;
+        break;
+      case 'Y':
+        me = opponent - 'A' + 1;
+        total += 3;
+        break;
+      case 'Z':
+        me = ((opponent - 'A' + 1) % 3) + 1;
+        total += 6;
+        break;
+      }
+      total += me;
+    } while (!feof(input));
+    printf("Part 2: %d\n", total);
+    fclose(input);
+  }
+#+end_src
+* Day 3
+Another day of awful inefficient solutions 🙂
+** Haskell
+*** Part 1
+- Here we /can/ use =fromEnum= for getting the ASCII value, but =ord= is
+  just simpler
+- One thing to note is that Haskell Strings are just =[Char]=, meaning
+  they're lazy lists with lots of memory overhead (see [[https://wiki.haskell.org/Strings][this]]). This
+  leads =length= going through the whole list in addition to =splitAt=
+- =intersect= finds the intersect of two lists, but since our data is
+  already in tuples, =uncurry= just makes the types fit.
+#+begin_src haskell
+import Data.List (intersect)
+import Data.Char (ord, isLower)
+
+findPriority :: [String] -> [Int]
+findPriority = map $
+  -- Get the priority
+  (\item -> ord item - (if isLower item then (ord 'a') - 1 else (ord 'A') - 27))
+  -- Find the common character
+  . head . uncurry intersect
+  -- Split lines into tuples
+  . \line -> splitAt (length line `div` 2) line
+
+main :: IO ()
+main = readFile "inputs/day3.txt" >>= (print . sum . findPriority . lines)
+#+end_src
+*** Part 2
+- Would you look at that! More imports 🙂
+- Once again, we're =intersect=-ing, but this time it's every 3
+  lines. The Sequence library has got the handy =chunksOf= which will
+  take care of that, but that introduces the (in)convenience of
+  having to deal with sequences; they have more efficient functions,
+  but you now have to deal with type conversion.
+- =><= is the equivalent of =++=, and folding that gives us the
+  badge.
+ #+begin_src haskell
+import Data.List (intersect)
+import Data.Char (ord, isLower)
+import Data.Sequence (chunksOf, fromList, (><))
+import Data.Foldable (toList)
+
+badgeCount :: [String] -> Int
+badgeCount = sum
+  . fmap (\badge ->
+          ord badge - if isLower badge then (ord 'a') - 1 else (ord 'A') - 27)
+  . fmap (head . foldl1 (intersect . toList))
+  . chunksOf 3 . fromList
+
+main :: IO ()
+main = readFile "inputs/day3.txt" >>= (print . badgeCount .  lines)
+  #+end_src
+* Day 4
+** TS/JS
+*** Part 1
+#+begin_src typescript :tangle ./aoc.js
+  const fs = require('fs')
+
+  function contains(pair1, pair2) {
+      return (pair1[0] >= pair2[0] && pair1[1] <= pair2[1])
+          || (pair2[0] >= pair1[0] && pair2[1] <= pair1[1])
+  }
+
+  fs.readFile("./inputs/day4.txt", "utf8", (_, data) => {
+      const count =
+          data.split('\n')
+              .map((line) => line.split(',').map((range) => range.split('-').map((num) => parseInt(num))))
+              .filter((range) => range.length == 2 && contains(range[0], range[1]))
+              .length
+      console.log(`Part 1: ${count}`)
+  })
+#+end_src
