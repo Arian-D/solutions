@@ -1,0 +1,63 @@
+#+title: Advent of Code 2024
+#+startup: fold
+
+* Day 1
+Day 1 is easy, so I'll try do it in a few languages before giving up
+entirely around day 2 🙂
+** Nushell
+*** Part 1
+To put it in simple words, we want the sum of difference of sorted
+lists put/zipped together. =parse= gets the numbers, we =into int= each
+number using =update=, the lists are zipped with =zip=, and finally we
+get the difference of =each= pair and =math sum= sums them up.
+#+begin_src nushell :results none :noweb-ref nu-day1-part1
+  def "total distance" []: string -> int {
+  $in
+   | parse --regex "(?P<left>[0-9]+)[ \t]+(?P<right>[0-9]+)"
+   | update left {|row| $row.left | into int }
+   | update right {|row| $row.right | into int }
+   | do { |left, right| $left | zip $right } ($in.left | sort) ($in.right | sort)
+   | each { |pair| $pair.0 - $pair.1 | math abs}
+   | math sum
+  }
+#+end_src
+
+*** Part 2
+Parsing is identical to part 1, but instead of sorting, we leverage
+Nushell's =uniq= which gets the count. =try= discards non-existent values,
+and we finish it off with =math product= and =math sum=.
+#+begin_src nushell :results none :noweb-ref nu-day1-part2
+  def "similarity score" []: string -> int {
+  $in
+  | parse --regex "(?P<left>[0-9]+)[ \t]+(?P<right>[0-9]+)"
+  | update left {|row| $row.left | into int }
+  | update right {|row| $row.right | into int }
+  | do {|left right|
+   $left
+   | each {|n| try { $n * ($right | where $it.value == $n | get count.0?) } }
+   } $in.left ($in.right | uniq --count)
+  | each { math product }
+  | math sum
+  }
+#+end_src
+
+*** Test
+#+begin_src nushell :noweb yes
+  use std assert
+
+  <<nu-day1-part1>>
+  <<nu-day1-part2>>
+
+  let test_case = "
+  3   4
+  4   3
+  2   5
+  1   3
+  3   9
+  3   3
+  "
+
+  assert equal ($test_case | total distance) 11
+  assert equal ($test_case | similarity score) 31
+
+#+end_src
