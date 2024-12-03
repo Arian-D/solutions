@@ -61,3 +61,50 @@ and we finish it off with =math product= and =math sum=.
   assert equal ($test_case | similarity score) 31
 
 #+end_src
+
+
+* Day 2
+** TODO Nushell
+This is gonna be hard to do in a functional/piped way, so I'll do it
+later. No loops 😤
+*** Part 1
+#+begin_src nushell :noweb-ref nu-day2-part1
+  def "safe reports" [] {
+    $in
+    | lines
+    | each { split row " " | into int }
+    | each {|row|
+    $row
+    }
+  }
+#+end_src
+*** Test
+#+begin_src nushell
+  let test_case = "
+  7 6 4 2 1
+  1 2 7 8 9
+  9 7 6 2 1
+  1 3 2 4 5
+  8 6 4 4 1
+  1 3 6 7 9
+  "
+
+  $test_case
+  | lines
+  | str split " "
+  | reduce
+#+end_src
+
+* Day 3
+** Nushell
+*** Part 1
+Using =parse= and a simple regex pattern:
+#+begin_src nushell
+  def "sum of products" []: string -> int {
+  $in
+   | parse --regex "mul\\((?P<left>\\d+),(?P<right>\\d+)\\)"
+   | par-each { |row| ($row.left | into int) * ($row.right | into int)}
+   | math sum
+  }
+#+end_src
+
