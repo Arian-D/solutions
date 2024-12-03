@@ -102,8 +102,9 @@ Using =parse= and a simple regex pattern:
 #+begin_src nushell
   def "sum of products" []: string -> int {
   $in
-   | parse --regex "mul\\((?P<left>\\d+),(?P<right>\\d+)\\)"
-   | par-each { |row| ($row.left | into int) * ($row.right | into int)}
+   | parse --regex "l\\((?P<left>\\d+),(?P<right>\\d+)\\)"
+   | into int left right
+   | par-each { |row| $row.left * $row.right }
    | math sum
   }
 #+end_src
